@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+           http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+
+    <changeSet id="1" author="Jared Lanoue">
+
+        <createTable tableName="pokemon">
+            <column name="id" type="int">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="text"/>
+            <column name="height" type="float"/>
+            <column name="weight" type="float"/>
+            <column name="genus" type="text"/>
+            <column name="description" type="text"/>
+            <column name="hp" type="int"/>
+            <column name="speed" type="int"/>
+            <column name="attack" type="int"/>
+            <column name="defense" type="int"/>
+            <column name="special_attack" type="int"/>
+            <column name="special_defense" type="int"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

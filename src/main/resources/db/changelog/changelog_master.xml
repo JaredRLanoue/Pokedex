@@ -6,4 +6,13 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
 
+    <include relativeToChangelogFile="true" file="create_pokemon_table.xml"/>
+    <include relativeToChangelogFile="true" file="create_types_table.xml"/>
+    <include relativeToChangelogFile="true" file="create_abilities_table.xml"/>
+    <include relativeToChangelogFile="true" file="create_egg_groups_table.xml"/>
+    <include relativeToChangelogFile="true" file="create_pokemon_types_table.xml"/>
+    <include relativeToChangelogFile="true" file="create_user_table.xml"/>
+    <include relativeToChangelogFile="true" file="create_user_captured_table.xml"/>
+    <include relativeToChangelogFile="true" file="load_csv_data.xml"/>
+
 </databaseChangeLog>
