@@ -10,7 +10,8 @@
 
         <createTable tableName="egg_groups">
             <column name="id" type="int"/>
-            <column name="egg_groups" type="text"/>
+            <column name="egg_group_one" type="text"/>
+            <column name="egg_group_two" type="text"/>
         </createTable>
 
     </changeSet>

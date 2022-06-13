@@ -10,7 +10,8 @@
 
         <createTable tableName="types">
             <column name="id" type="int"/>
-            <column name="type" type="text"/>
+            <column name="type_one" type="text"/>
+            <column name="type_two" type="text"/>
         </createTable>
 
     </changeSet>

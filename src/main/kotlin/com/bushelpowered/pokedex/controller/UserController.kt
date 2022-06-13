@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
 @RestController
-class UserController(val service: UserService){
+class UserController(val service: UserService) {
 
     @PostMapping("/register")
     fun register(@RequestBody user: User): ResponseEntity<Message> {
@@ -15,7 +15,7 @@ class UserController(val service: UserService){
     }
 
     @PostMapping("/login")
-    fun login(@RequestBody login: Login): Any{
+    fun login(@RequestBody login: Login): Any {
         return service.checkLogin(login)
     }
 

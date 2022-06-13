@@ -1,10 +1,10 @@
 package com.bushelpowered.pokedex.service
 
-import com.bushelpowered.pokedex.model.Message
-import com.bushelpowered.pokedex.model.Pokemon
-import com.bushelpowered.pokedex.model.Stats
-import com.bushelpowered.pokedex.model.Types
+import com.bushelpowered.pokedex.model.*
+import com.bushelpowered.pokedex.repository.AbilitiesRepository
+import com.bushelpowered.pokedex.repository.EggGroupRepository
 import com.bushelpowered.pokedex.repository.PokemonRepository
+import com.bushelpowered.pokedex.repository.TypeRepository
 import com.google.gson.Gson
 import liquibase.repackaged.com.opencsv.CSVReader
 import liquibase.repackaged.com.opencsv.CSVReaderBuilder
@@ -14,17 +14,23 @@ import java.io.FileReader
 
 
 @Service
-class CsvService(val pokemonRepository: PokemonRepository) {
+class CsvService(
+    val pokemonRepository: PokemonRepository,
+    val typeRepository: TypeRepository,
+    val abilitiesRepository: AbilitiesRepository,
+    val eggGroupRepository: EggGroupRepository
+) {
 
     fun populateDatabaseWithCsv(): ResponseEntity<Message> {
         val fileContents = readCsvFile()
+
         if (fileContents != null) {
             for (pokemon in fileContents) {
-                val pokemonObject = parseDataIntoObject(pokemon)
+                val pokemonObject = turnDataIntoObjects(pokemon)
                 pokemonRepository.save(pokemonObject)
             }
         } else {
-            throw Exception("CSV File Is Null!")
+            throw Exception("CSV File Is Empty!")
         }
         return ResponseEntity.accepted().body(Message("Finished Importing CSV Into Database!"))
     }
@@ -35,33 +41,48 @@ class CsvService(val pokemonRepository: PokemonRepository) {
         return csvReader.readAll()
     }
 
-    fun cleanString(uncleanString: String){
-        uncleanString.replace(Regex("[^A-Za-z0-9,]"), "").split(",").toList()
+    fun convertStringToList(uncleanString: String): List<String> {
+        return uncleanString.replace(Regex("[^A-Za-z0-9-,]"), "").split(",").toList()
     }
 
-    fun parseDataIntoObject(pokemon: Array<String>): Pokemon {
-        val stats = Gson().fromJson(pokemon[7], Stats::class.java)
+    fun turnDataIntoObjects(pokemon: Array<String>): Pokemon {
+        val statsJson = Gson().fromJson(pokemon[7], Stats::class.java)
+        val typesList = convertStringToList(pokemon[2])
+        val abilitiesList = convertStringToList(pokemon[5])
+        val eggGroupsList = convertStringToList(pokemon[6])
 
-        val types = cleanString(pokemon[2])
-        val abilities = cleanString(pokemon[5])
-        val eggGroups = cleanString(pokemon[6])
+        val typesObject = Types(
+            pokemon[0].toInt(), typesList[0], typesList.getOrNull(1)
+        )
+
+        val abilitiesObject = Abilities(
+            pokemon[0].toInt(), abilitiesList[0], abilitiesList.getOrNull(1), abilitiesList.getOrNull(2)
+        )
+
+        val eggGroupsObject = EggGroups(
+            pokemon[0].toInt(), eggGroupsList[0], eggGroupsList.getOrNull(1)
+        )
+
+        typeRepository.save(typesObject)
+        abilitiesRepository.save(abilitiesObject)
+        eggGroupRepository.save(eggGroupsObject)
 
         return Pokemon(
-            pokemon[0].toInt(),
-            pokemon[1],
-            pokemon[3].toInt(),
-            pokemon[4].toInt(),
-            pokemon[8],
-            pokemon[9],
-            stats.hp,
-            stats.speed,
-            stats.attack,
-            stats.defense,
-            stats.special_attack,
-            stats.special_defense,
-            null,
-            null,
-            null
+            id = pokemon[0].toInt(),
+            name = pokemon[1],
+            height = pokemon[3].toInt(),
+            weight = pokemon[4].toInt(),
+            genus = pokemon[8],
+            description = pokemon[9],
+            hp = statsJson.hp,
+            speed = statsJson.speed,
+            attack = statsJson.attack,
+            defense = statsJson.defense,
+            specialAttack = statsJson.special_attack,
+            specialDefense = statsJson.special_defense,
+            types = listOf(typesObject),
+            eggGroups = listOf(eggGroupsObject),
+            abilities = listOf(abilitiesObject)
         )
     }
 }

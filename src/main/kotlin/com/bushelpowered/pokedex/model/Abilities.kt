@@ -1,14 +1,19 @@
 package com.bushelpowered.pokedex.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonInclude
 import javax.persistence.*
 
 @Entity
 @Table(name = "abilities")
 data class Abilities(
-    @JsonIgnore
     @Id
+    @JsonIgnore
+    @JoinColumn(name = "abilities_id")
     val id: Int?,
-    @Column(name = "abilities")
-    val ability: String = "N/A"
+    var abilityOne: String,
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    var abilityTwo: String?,
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    var abilityThree: String?
 )

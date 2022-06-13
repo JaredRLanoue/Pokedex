@@ -1,6 +1,7 @@
 package com.bushelpowered.pokedex.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonInclude
 import javax.persistence.*
 
 @Entity
@@ -8,8 +9,9 @@ import javax.persistence.*
 data class EggGroups(
     @JsonIgnore
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JoinColumn(name = "egg_groups_id")
     val id: Int?,
-    @Column(name = "eggGroups")
-    val eggGroup: String = "N/A"
+    val eggGroupOne: String,
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    val eggGroupTwo: String?
 )

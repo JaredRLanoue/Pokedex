@@ -1,4 +1,4 @@
-package com.bushelpowered.pokedex.security.config
+package com.bushelpowered.pokedex.security
 
 import com.bushelpowered.pokedex.service.CsvService
 import org.springframework.beans.factory.annotation.Autowired
