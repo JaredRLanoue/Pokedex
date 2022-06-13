@@ -14,26 +14,26 @@
             <column header="weight" index="4" type="INT" name="weight" />
             <column header="genus" index="8" type="TEXT" name="genus" />
             <column header="description" index="9" type="TEXT" name="description"/>
-            <column header="stats" type="skip"/>
 
+            <column header="stats" type="skip"/>
             <column header="types" type="skip"/>
             <column header="abilities" type="skip"/>
             <column header="egg_groups" type="skip"/>
         </loadUpdateData>
     </changeSet>
 
-    <changeSet id="10" author="Jared Lanoue">
-        <loadUpdateData tableName="types" schemaName="app_data" file="db/pokedex.csv" primaryKey="id">
-            <column header="id" index="2" type="TEXT" name="types"/>
-            <column header="name" type="skip" />
-            <column header="stats" type="skip"/>
-            <column header="types" type="skip"/>
-            <column header="abilities" type="skip"/>
-            <column header="egg_groups" type="skip"/>
-            <column header="weight" type="skip"/>
-            <column header="height" type="skip"/>
-            <column header="genus" type="skip"/>
-            <column header="description" type="skip"/>
-        </loadUpdateData>
-    </changeSet>
+<!--    <changeSet id="10" author="Jared Lanoue">-->
+<!--        <loadUpdateData tableName="types" schemaName="app_data" file="db/pokedex.csv" primaryKey="id">-->
+<!--            <column header="id" index="2" type="TEXT" name="types"/>-->
+<!--            <column header="name" type="skip" />-->
+<!--            <column header="stats" type="skip"/>-->
+<!--            <column header="types" type="skip"/>-->
+<!--            <column header="abilities" type="skip"/>-->
+<!--            <column header="egg_groups" type="skip"/>-->
+<!--            <column header="weight" type="skip"/>-->
+<!--            <column header="height" type="skip"/>-->
+<!--            <column header="genus" type="skip"/>-->
+<!--            <column header="description" type="skip"/>-->
+<!--        </loadUpdateData>-->
+<!--    </changeSet>-->
 </databaseChangeLog>

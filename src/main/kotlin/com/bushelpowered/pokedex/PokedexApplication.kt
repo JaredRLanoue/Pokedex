@@ -1,15 +1,13 @@
 package com.bushelpowered.pokedex
 
+import com.bushelpowered.pokedex.service.CsvService
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
-import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.userdetails.User
-import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.context.event.EventListener
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.security.provisioning.InMemoryUserDetailsManager
-import org.springframework.stereotype.Component
+import javax.annotation.PostConstruct
 
 
 @SpringBootApplication
@@ -19,19 +17,11 @@ class PokedexApplication
 		runApplication<PokedexApplication>(*args)
 	}
 
-@Bean
-fun bCryptPasswordEncoder(): BCryptPasswordEncoder {
-	return BCryptPasswordEncoder()
-}
+	@Bean
+	fun bCryptPasswordEncoder(): BCryptPasswordEncoder {
+		return BCryptPasswordEncoder()
+	}
 
-@Override
-@Bean
-fun userDetailsService(username: String, password: String): UserDetailsService {
-	val userdetails = User.builder()
-		.username(username)
-		.password(bCryptPasswordEncoder().encode(password))
-		.build()
 
-	return InMemoryUserDetailsManager(userdetails)
-}
+
 

@@ -23,24 +23,24 @@ data class Pokemon(
     @Column(name = "special_defense")
     val specialDefense: Int?,
 
-    @ManyToMany
+    @OneToMany
     @JoinTable(
         name = "pokemon_types",
         joinColumns = [ JoinColumn(name = "pokemon_id")],
         inverseJoinColumns = [JoinColumn(name = "types_id")])
-    var types: List<Types>,
+    var types: List<Types?>?,
 
     @ManyToMany
     @JoinTable(
         name = "pokemon_egg_groups",
         joinColumns = [ JoinColumn(name = "pokemon_id")],
         inverseJoinColumns = [JoinColumn(name = "egg_groups_id")])
-    val eggGroups: List<EggGroups>,
+    val eggGroups: List<EggGroups>?,
 
     @ManyToMany
     @JoinTable(
         name = "pokemon_abilities",
         joinColumns = [ JoinColumn(name = "pokemon_id")],
         inverseJoinColumns = [JoinColumn(name = "abilities_id")])
-    val abilities: Set<Abilities>
+    val abilities: List<Abilities>?
 )

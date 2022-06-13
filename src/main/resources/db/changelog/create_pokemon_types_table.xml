@@ -9,7 +9,9 @@
     <changeSet id="2" author="Jared Lanoue">
 
         <createTable tableName="pokemon_types">
-            <column name="id" type="int"/>
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
             <column name="pokemon_id" type="int"/>
             <column name="types_id" type="int"/>
         </createTable>

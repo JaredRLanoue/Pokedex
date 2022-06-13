@@ -24,6 +24,8 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.liquibase:liquibase-core")
+	implementation("com.google.code.gson:gson:2.9.0")
+	implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.13.3")
 	runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

@@ -9,7 +9,7 @@ data class EggGroups(
     @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int,
+    val id: Int?,
     @Column(name = "eggGroups")
-    val eggGroup: String
+    val eggGroup: String = "N/A"
 )

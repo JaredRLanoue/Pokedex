@@ -8,7 +8,7 @@ import javax.persistence.*
 data class Types(
     @JsonIgnore
     @Id
-    val id: Int,
-    @Column(name = "types")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Int?,
     var type: String
 )

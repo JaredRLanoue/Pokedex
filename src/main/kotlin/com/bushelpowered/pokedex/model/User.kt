@@ -1,8 +1,6 @@
 package com.bushelpowered.pokedex.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
 import javax.persistence.*
 
 @Entity
@@ -14,6 +12,7 @@ data class User(
     val id: Int,
     val username: String,
     val email: String,
+    @JsonIgnore
     var password: String,
     @OneToMany
     @JoinTable(
