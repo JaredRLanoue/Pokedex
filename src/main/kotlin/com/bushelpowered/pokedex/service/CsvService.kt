@@ -1,6 +1,11 @@
 package com.bushelpowered.pokedex.service
 
-import com.bushelpowered.pokedex.model.*
+import com.bushelpowered.pokedex.dto.MessageDTO
+import com.bushelpowered.pokedex.dto.StatsDTO
+import com.bushelpowered.pokedex.entity.Abilities
+import com.bushelpowered.pokedex.entity.EggGroups
+import com.bushelpowered.pokedex.entity.Pokemon
+import com.bushelpowered.pokedex.entity.Types
 import com.bushelpowered.pokedex.repository.AbilitiesRepository
 import com.bushelpowered.pokedex.repository.EggGroupRepository
 import com.bushelpowered.pokedex.repository.PokemonRepository
@@ -15,74 +20,102 @@ import java.io.FileReader
 
 @Service
 class CsvService(
-    val pokemonRepository: PokemonRepository,
-    val typeRepository: TypeRepository,
-    val abilitiesRepository: AbilitiesRepository,
-    val eggGroupRepository: EggGroupRepository
+    private val pokemonRepository: PokemonRepository,
+    private val typeRepository: TypeRepository,
+    private val abilitiesRepository: AbilitiesRepository,
+    private val eggGroupRepository: EggGroupRepository
 ) {
 
-    fun populateDatabaseWithCsv(): ResponseEntity<Message> {
+    fun setupDatabase(): ResponseEntity<MessageDTO> {
         val fileContents = readCsvFile()
 
         if (fileContents != null) {
-            for (pokemon in fileContents) {
-                val pokemonObject = turnDataIntoObjects(pokemon)
-                pokemonRepository.save(pokemonObject)
+            val uniqueTypes = findUniqueStrings(fileContents, 2)
+            val uniqueAbilities = findUniqueStrings(fileContents, 5)
+            val uniqueEggGroups = findUniqueStrings(fileContents, 6)
+
+            for (type in uniqueTypes) {
+                typeRepository.save(Types(id = null, type = type))
             }
+            for (ability in uniqueAbilities) {
+                abilitiesRepository.save(Abilities(id = null, ability = ability))
+            }
+            for (eggGroup in uniqueEggGroups) {
+                eggGroupRepository.save(EggGroups(id = null, eggGroup = eggGroup))
+            }
+            return turnDataIntoPokemon(fileContents)
         } else {
-            throw Exception("CSV File Is Empty!")
+            return ResponseEntity.badRequest().body(MessageDTO("CSV file is empty, cannot load into database"))
         }
-        return ResponseEntity.accepted().body(Message("Finished Importing CSV Into Database!"))
     }
 
     fun readCsvFile(): MutableList<Array<String>>? {
         val csvReader: CSVReader =
             CSVReaderBuilder(FileReader("src/main/resources/db/pokedex.csv")).withSkipLines(1).build()
-        return csvReader.readAll()
+        val fileContents = csvReader.readAll()
+        csvReader.close()
+        return fileContents
     }
 
     fun convertStringToList(uncleanString: String): List<String> {
-        return uncleanString.replace(Regex("[^A-Za-z0-9-,]"), "").split(",").toList()
+        val removeFromString = "[^A-Za-z0-9-,]"
+        return uncleanString.replace(Regex(removeFromString), "").split(",").toList()
     }
 
-    fun turnDataIntoObjects(pokemon: Array<String>): Pokemon {
-        val statsJson = Gson().fromJson(pokemon[7], Stats::class.java)
-        val typesList = convertStringToList(pokemon[2])
-        val abilitiesList = convertStringToList(pokemon[5])
-        val eggGroupsList = convertStringToList(pokemon[6])
+    fun findUniqueStrings(fileContents: MutableList<Array<String>>?, csvIndex: Int): MutableList<String> {
+        val uniqueStringList: MutableList<String> = mutableListOf()
 
-        val typesObject = Types(
-            pokemon[0].toInt(), typesList[0], typesList.getOrNull(1)
-        )
-
-        val abilitiesObject = Abilities(
-            pokemon[0].toInt(), abilitiesList[0], abilitiesList.getOrNull(1), abilitiesList.getOrNull(2)
-        )
-
-        val eggGroupsObject = EggGroups(
-            pokemon[0].toInt(), eggGroupsList[0], eggGroupsList.getOrNull(1)
-        )
-
-        typeRepository.save(typesObject)
-        abilitiesRepository.save(abilitiesObject)
-        eggGroupRepository.save(eggGroupsObject)
-
-        return Pokemon(
-            id = pokemon[0].toInt(),
-            name = pokemon[1],
-            height = pokemon[3].toInt(),
-            weight = pokemon[4].toInt(),
-            genus = pokemon[8],
-            description = pokemon[9],
-            hp = statsJson.hp,
-            speed = statsJson.speed,
-            attack = statsJson.attack,
-            defense = statsJson.defense,
-            specialAttack = statsJson.special_attack,
-            specialDefense = statsJson.special_defense,
-            types = listOf(typesObject),
-            eggGroups = listOf(eggGroupsObject),
-            abilities = listOf(abilitiesObject)
-        )
+        for (listOfStrings in fileContents!!) {
+            val stringList = convertStringToList(listOfStrings[csvIndex])
+            for (string in stringList) {
+                if (string !in uniqueStringList)
+                    uniqueStringList += string
+            }
+        }
+        return uniqueStringList
     }
+
+    fun getAbilitiesFromDatabase(abilitiesStringList: List<String>): List<Abilities> {
+        return abilitiesStringList.map { abilitiesRepository.findByAbility(it) }
+    }
+
+    fun getEggGroupsFromDatabase(eggGroupsStringList: List<String>): List<EggGroups> {
+        return eggGroupsStringList.map { eggGroupRepository.findByEggGroup(it) }
+    }
+
+    fun getTypesFromDatabase(typesStringList: List<String>): List<Types> {
+        return typesStringList.map { typeRepository.findByType(it) }
+    }
+
+    fun turnDataIntoPokemon(fileContents: MutableList<Array<String>>?): ResponseEntity<MessageDTO> {
+        for (pokemon in fileContents!!) {
+            val statsJson = Gson().fromJson(pokemon[7], StatsDTO::class.java)
+            val listOfTypes = getTypesFromDatabase(convertStringToList(pokemon[2]))
+            val listOfAbilities = getAbilitiesFromDatabase(convertStringToList(pokemon[5]))
+            val listOfEggGroups = getEggGroupsFromDatabase(convertStringToList(pokemon[6]))
+
+            pokemonRepository.save(
+                Pokemon(
+                    id = pokemon[0].toInt(),
+                    name = pokemon[1],
+                    height = pokemon[3].toInt(),
+                    weight = pokemon[4].toInt(),
+                    genus = pokemon[8],
+                    description = pokemon[9],
+                    hp = statsJson.hp,
+                    speed = statsJson.speed,
+                    attack = statsJson.attack,
+                    defense = statsJson.defense,
+                    specialAttack = statsJson.specialAttack,
+                    specialDefense = statsJson.specialDefense,
+                    types = listOfTypes,
+                    eggGroups = listOfEggGroups,
+                    abilities = listOfAbilities
+                )
+            )
+        }
+        return ResponseEntity.accepted().body(MessageDTO("Finished Importing CSV Into Database!"))
+    }
+
+
 }

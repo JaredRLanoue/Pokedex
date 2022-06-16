@@ -1,8 +1,8 @@
 package com.bushelpowered.pokedex.repository
 
-import com.bushelpowered.pokedex.model.Pokemon
-import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.stereotype.Repository
+import com.bushelpowered.pokedex.entity.Pokemon
+import org.springframework.data.repository.PagingAndSortingRepository
 
-@Repository
-interface PokemonRepository : JpaRepository<Pokemon, Int>
+interface PokemonRepository : PagingAndSortingRepository<Pokemon, Int> {
+    fun getReferenceById(pokemonID: Int): Pokemon
+}

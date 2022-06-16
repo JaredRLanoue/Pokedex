@@ -1,14 +1,14 @@
-package com.bushelpowered.pokedex.model
+package com.bushelpowered.pokedex.dto
 
 import com.google.gson.annotations.SerializedName
 
-data class Stats(
+data class StatsDTO(
     val hp: Int,
     val speed: Int,
     val attack: Int,
     val defense: Int,
     @SerializedName("special-attack")
-    val special_attack: Int,
+    val specialAttack: Int,
     @SerializedName("special-defense")
-    val special_defense: Int
+    val specialDefense: Int
 )

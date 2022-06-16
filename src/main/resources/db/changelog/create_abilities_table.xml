@@ -6,13 +6,13 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
 
-    <changeSet id="4" author="Jared Lanoue">
+    <changeSet id="3" author="Jared Lanoue">
 
         <createTable tableName="abilities">
-            <column name="id" type="int"/>
-            <column name="ability_one" type="text"/>
-            <column name="ability_two" type="text"/>
-            <column name="ability_three" type="text"/>
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="ability" type="text"/>
         </createTable>
 
     </changeSet>

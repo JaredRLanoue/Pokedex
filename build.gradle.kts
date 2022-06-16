@@ -26,6 +26,7 @@ dependencies {
 	implementation("org.liquibase:liquibase-core")
 	implementation("com.google.code.gson:gson:2.9.0")
 	implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.13.3")
+	implementation("com.ninja-squad:springmockk:3.1.1")
 	runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
