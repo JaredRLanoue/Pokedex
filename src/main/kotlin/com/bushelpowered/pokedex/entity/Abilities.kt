@@ -7,7 +7,6 @@ import javax.persistence.*
 @Table(name = "abilities")
 data class Abilities(
     @Id
-    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int?,
     var ability: String

@@ -36,6 +36,7 @@ class TrainerService(private val trainerRepository: TrainerRepository, private v
     fun createUser(trainer: TrainerRegistrationDTO): ResponseEntity<Any> {
         trainer.password = BCryptPasswordEncoder().encode(trainer.password)
         val trainerEntity = converterService.trainerDTOToEntity(trainer)
+
         trainerRepository.save(trainerEntity)
         return ResponseEntity.accepted().body(MessageDTO("${trainer.username}'s account has been created"))
     }
@@ -47,9 +48,7 @@ class TrainerService(private val trainerRepository: TrainerRepository, private v
             if (trainerLogin.password!!.length > hashingLimit) {
                 return ResponseEntity.badRequest().body(MessageDTO("Password exceeds character limit"))
             }
-            val passwordMatches = BCryptPasswordEncoder().matches(
-                trainerLogin.password, trainerRepository.findByEmail(trainerLogin.email)?.password
-            )
+            val passwordMatches = BCryptPasswordEncoder().matches(trainerLogin.password, trainerRepository.findByEmail(trainerLogin.email)?.password)
 
             return if (passwordMatches) {
                 ResponseEntity.accepted().body(MessageDTO("Passwords match for user, login is allowed"))

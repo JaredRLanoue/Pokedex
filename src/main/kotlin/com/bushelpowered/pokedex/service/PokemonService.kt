@@ -1,6 +1,6 @@
 package com.bushelpowered.pokedex.service
 
-import com.bushelpowered.pokedex.dto.CustomPageDTO
+import com.bushelpowered.pokedex.dto.PageDTO
 import com.bushelpowered.pokedex.dto.PokemonDTO
 import com.bushelpowered.pokedex.repository.PokemonRepository
 import org.springframework.data.domain.PageRequest
@@ -15,14 +15,14 @@ class PokemonService(private val converterService: ConverterService, private val
         return pokemonRepository.existsById(pokemonID)
     }
 
-    fun getAllPokemon(page: Int): CustomPageDTO {
+    fun getAllPokemon(page: Int): PageDTO {
         val pageRequest = PageRequest.of(page, 15)
         val pageContent = pokemonRepository.findAll(pageRequest)
         val pageContentAsDTO = pageContent.content.map { converterService.pokemonEntityToDTO(it) }
         val requestURL = "http://localhost:8080/pokemon?page="
 
-        return CustomPageDTO(
-            pageContentAsDTO, CustomPageDTO.MetaDataDTO(
+        return PageDTO(
+            pageContentAsDTO, PageDTO.MetaDataDTO(
                 currentPage = pageRequest.pageNumber,
                 lastPage = pageContent.totalPages - 1,
                 PokemonPerPage = pageRequest.pageSize,

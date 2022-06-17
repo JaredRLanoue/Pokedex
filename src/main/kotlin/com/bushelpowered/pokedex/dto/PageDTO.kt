@@ -1,6 +1,6 @@
 package com.bushelpowered.pokedex.dto
 
-data class CustomPageDTO(
+data class PageDTO(
     val data: List<PokemonDTO>,
     val meta: MetaDataDTO
 ) {

@@ -9,13 +9,11 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-class TrainerController(
-    private val trainerService: TrainerService,
-    private val capturedService: CaptureService, ) {
+class TrainerController(private val trainerService: TrainerService, private val capturedService: CaptureService) {
 
     @PostMapping("/register")
     fun register(@RequestBody trainer: TrainerRegistrationDTO): ResponseEntity<Any> {
-        return if(trainer.email.isNullOrBlank() || trainer.password.isNullOrBlank() || trainer.username.isNullOrBlank()){
+        return if (trainer.email.isNullOrBlank() || trainer.password.isNullOrBlank() || trainer.username.isNullOrBlank()) {
             ResponseEntity.badRequest().body(MessageDTO("Missing request body parameter"))
         } else {
             trainerService.checkValidRegistration(trainer)
@@ -24,7 +22,7 @@ class TrainerController(
 
     @PostMapping("/login")
     fun login(@RequestBody trainer: TrainerLoginDTO): ResponseEntity<MessageDTO> {
-        return if(trainer.email.isNullOrBlank() || trainer.password.isNullOrBlank()) {
+        return if (trainer.email.isNullOrBlank() || trainer.password.isNullOrBlank()) {
             ResponseEntity.badRequest().body(MessageDTO("Missing request body parameter"))
         } else {
             trainerService.checkLogin(trainer)

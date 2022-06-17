@@ -1,14 +1,14 @@
 package com.bushelpowered.pokedex.controller
 
 import com.bushelpowered.pokedex.dto.MessageDTO
-import com.bushelpowered.pokedex.service.CsvService
+import com.bushelpowered.pokedex.service.DatabaseService
 import com.bushelpowered.pokedex.service.PokemonService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 
 @RestController
-class PokemonController(private val pokemonService: PokemonService, private val csvService: CsvService) {
+class PokemonController(private val pokemonService: PokemonService, private val databaseService: DatabaseService) {
 
     @GetMapping("/pokemon")
     fun getAllPokemon(@RequestParam(required = false, defaultValue = "0") page: Int): ResponseEntity<Any> {
@@ -25,8 +25,8 @@ class PokemonController(private val pokemonService: PokemonService, private val 
     }
 
     @PostMapping("/upload")
-    fun capturePokemons(): ResponseEntity<MessageDTO> {
-        return csvService.setupDatabase()
+    fun loadPokemonIntoDatabase(): ResponseEntity<MessageDTO> {
+        return databaseService.setupDatabase()
     }
 }
 

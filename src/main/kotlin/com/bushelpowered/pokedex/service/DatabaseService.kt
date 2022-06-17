@@ -19,7 +19,7 @@ import java.io.FileReader
 
 
 @Service
-class CsvService(
+class DatabaseService(
     private val pokemonRepository: PokemonRepository,
     private val typeRepository: TypeRepository,
     private val abilitiesRepository: AbilitiesRepository,
@@ -28,12 +28,10 @@ class CsvService(
 
     fun setupDatabase(): ResponseEntity<MessageDTO> {
         val fileContents = readCsvFile()
-
-        if (fileContents != null) {
+        if(pokemonRepository.findAll().toList().isEmpty()) {
             val uniqueTypes = findUniqueStrings(fileContents, 2)
             val uniqueAbilities = findUniqueStrings(fileContents, 5)
             val uniqueEggGroups = findUniqueStrings(fileContents, 6)
-
             for (type in uniqueTypes) {
                 typeRepository.save(Types(id = null, type = type))
             }
@@ -43,13 +41,14 @@ class CsvService(
             for (eggGroup in uniqueEggGroups) {
                 eggGroupRepository.save(EggGroups(id = null, eggGroup = eggGroup))
             }
+
             return turnDataIntoPokemon(fileContents)
         } else {
-            return ResponseEntity.badRequest().body(MessageDTO("CSV file is empty, cannot load into database"))
+            return ResponseEntity.badRequest().body(MessageDTO("Database has already been uploaded"))
         }
     }
 
-    fun readCsvFile(): MutableList<Array<String>>? {
+    fun readCsvFile(): MutableList<Array<String>> {
         val csvReader: CSVReader =
             CSVReaderBuilder(FileReader("src/main/resources/db/pokedex.csv")).withSkipLines(1).build()
         val fileContents = csvReader.readAll()
@@ -62,10 +61,10 @@ class CsvService(
         return uncleanString.replace(Regex(removeFromString), "").split(",").toList()
     }
 
-    fun findUniqueStrings(fileContents: MutableList<Array<String>>?, csvIndex: Int): MutableList<String> {
+    fun findUniqueStrings(fileContents: MutableList<Array<String>>, csvIndex: Int): MutableList<String> {
         val uniqueStringList: MutableList<String> = mutableListOf()
 
-        for (listOfStrings in fileContents!!) {
+        for (listOfStrings in fileContents) {
             val stringList = convertStringToList(listOfStrings[csvIndex])
             for (string in stringList) {
                 if (string !in uniqueStringList)
@@ -114,7 +113,7 @@ class CsvService(
                 )
             )
         }
-        return ResponseEntity.accepted().body(MessageDTO("Finished Importing CSV Into Database!"))
+        return ResponseEntity.accepted().body(MessageDTO("Finished Importing CSV Into Database"))
     }
 
 

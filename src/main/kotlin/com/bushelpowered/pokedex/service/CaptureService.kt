@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 class CaptureService(
     private val trainerRepository: TrainerRepository,
     private val pokemonRepository: PokemonRepository,
-    private val modelMappingService: ConverterService
+    private val converterService: ConverterService
 ) {
 
     fun capturePokemon(trainerID: Int, pokemonID: Int): ResponseEntity<Any> {
@@ -31,7 +31,7 @@ class CaptureService(
             val user = trainerRepository.getReferenceById(trainerID)
             val pokemonToRelease = pokemonRepository.getReferenceById(pokemonID)
 
-            if (user.capturedPokemon?.contains(pokemonToRelease) == false) {
+            if (pokemonToRelease !in user.capturedPokemon!!) {
                 return ResponseEntity.badRequest()
                     .body(MessageDTO("${pokemonToRelease.name} does not exist in trainer's captured list"))
             }
@@ -50,7 +50,7 @@ class CaptureService(
             return if (trainer.capturedPokemon.isNullOrEmpty()) {
                 return ResponseEntity.badRequest().body(MessageDTO("No pokemon have been captured yet"))
             } else {
-                ResponseEntity.accepted().body(modelMappingService.trainerEntityToDTO(trainer))
+                ResponseEntity.accepted().body(converterService.trainerEntityToDTO(trainer))
             }
         } else {
             return ResponseEntity.badRequest().body(MessageDTO("Trainer does not exist yet, try creating one first"))
