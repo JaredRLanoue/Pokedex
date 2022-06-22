@@ -19,6 +19,8 @@ class PokemonService(private val converterService: ConverterService, private val
         val pageRequest = PageRequest.of(page, 15)
         val pageContent = pokemonRepository.findAll(pageRequest)
         val pageContentAsDTO = pageContent.content.map { converterService.pokemonEntityToDTO(it) }
+
+        // This shouldn't be hardcoded
         val requestURL = "http://localhost:8080/pokemon?page="
 
         return PageDTO(

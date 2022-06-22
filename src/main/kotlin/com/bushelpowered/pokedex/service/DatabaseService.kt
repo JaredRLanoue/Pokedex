@@ -61,13 +61,14 @@ class DatabaseService(
         return uncleanString.replace(Regex(removeFromString), "").split(",").toList()
     }
 
-    fun findUniqueStrings(fileContents: MutableList<Array<String>>, csvIndex: Int): MutableList<String> {
+    private fun findUniqueStrings(fileContents: MutableList<Array<String>>, csvIndex: Int): MutableList<String> {
         val uniqueStringList: MutableList<String> = mutableListOf()
 
         for (listOfStrings in fileContents) {
             val stringList = convertStringToList(listOfStrings[csvIndex])
             for (string in stringList) {
                 if (string !in uniqueStringList)
+                    // Use the .add function instead
                     uniqueStringList += string
             }
         }

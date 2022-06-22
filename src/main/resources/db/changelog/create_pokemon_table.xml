@@ -9,10 +9,10 @@
     <changeSet id="1" author="Jared Lanoue">
 
         <createTable tableName="pokemon">
-            <column name="id" type="int">
+            <column name="id" type="uuid">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="name" type="text"/>
+            <column name="name" type="varchar(20)"/>  <!-- This should be a varchar instead -->
             <column name="height" type="float"/>
             <column name="weight" type="float"/>
             <column name="genus" type="text"/>

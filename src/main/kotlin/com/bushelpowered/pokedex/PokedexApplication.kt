@@ -6,7 +6,7 @@ import org.springframework.boot.runApplication
 
 @SpringBootApplication
 class PokedexApplication {
-
+ // No need to have a body here
 }
 
 fun main(args: Array<String>) {

@@ -9,7 +9,7 @@
     <changeSet id="5" author="Jared Lanoue">
 
         <createTable tableName="trainer">
-            <column name="id" type="bigint" autoIncrement="true">
+            <column name="id" type="bigint" autoIncrement="true"> <!-- Why is this a big int when the ids on other tables are just ints? -->
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="username" type="text"/>

@@ -13,3 +13,6 @@ data class PageDTO(
         val previousPage: String?
     )
 }
+// Instead of using the DTO suffix, you can suffix these DTOs with Response
+// Example, PageResponse instead of PageDTO
+// Spring has functionality to handle pagination
