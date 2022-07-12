@@ -1,10 +1,10 @@
 package com.bushelpowered.pokedex.repository
 
-import com.bushelpowered.pokedex.entity.Types
+import com.bushelpowered.pokedex.entity.Type
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface TypeRepository : JpaRepository<Types, Int> {
-    fun findByType(type: String): Types
+interface TypeRepository : JpaRepository<Type, Int> {
+    fun findByType(type: String): Type
 }

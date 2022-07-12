@@ -9,5 +9,4 @@ interface TrainerRepository : JpaRepository<Trainer, Int>{
     fun findByUsername(username: String?): Trainer?
     fun findByEmail(email: String?): Trainer?
     fun existsByEmail(email: String?): Boolean
-
 }

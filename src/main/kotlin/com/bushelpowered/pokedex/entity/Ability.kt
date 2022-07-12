@@ -1,13 +1,12 @@
 package com.bushelpowered.pokedex.entity
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
 @Entity
 @Table(name = "abilities")
-data class Abilities(
+data class Ability(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int?,
+    val id: Int? = null,
     var ability: String
 )

@@ -3,10 +3,10 @@ package com.bushelpowered.pokedex.entity
 import javax.persistence.*
 
 @Entity
-@Table(name = "types")
-data class Types(
+@Table(name = "egg_groups")
+data class EggGroup(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int?,
-    var type: String,
+    val id: Int? = null,
+    val eggGroup: String
 )

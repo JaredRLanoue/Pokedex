@@ -9,8 +9,8 @@
     <changeSet id="8" author="Jared Lanoue">
 
         <createTable tableName="pokemon_types">
-            <column name="pokemon_id" type="int"/>
-            <column name="types_id" type="int"/>
+            <column name="pokemon_id" type="bigint"/>
+            <column name="types_id" type="bigint"/>
         </createTable>
 
     </changeSet>

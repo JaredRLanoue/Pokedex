@@ -1,6 +1,6 @@
-package com.bushelpowered.pokedex.dto
+package com.bushelpowered.pokedex.dto.response
 
-data class PokemonDTO(
+data class PokemonResponse(
     val id: Int,
     val name: String,
     val types: List<String>,
@@ -8,7 +8,7 @@ data class PokemonDTO(
     val weight: Int,
     val abilities: List<String>,
     val eggGroups: List<String>,
-    val stats: StatsDTO,
+    val stats: StatsResponse,
     val genus: String,
     val description: String
 )

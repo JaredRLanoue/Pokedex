@@ -26,7 +26,7 @@ data class Pokemon(
         joinColumns = [JoinColumn(name = "pokemon_id")],
         inverseJoinColumns = [JoinColumn(name = "types_id")]
     )
-    val types: List<Types>?,
+    val types: List<Type>?,
 
     @OneToMany
     @JoinTable(
@@ -34,7 +34,7 @@ data class Pokemon(
         joinColumns = [JoinColumn(name = "pokemon_id")],
         inverseJoinColumns = [JoinColumn(name = "egg_groups_id")]
     )
-    val eggGroups: List<EggGroups>?,
+    val eggGroups: List<EggGroup>?,
 
     @OneToMany
     @JoinTable(
@@ -42,5 +42,5 @@ data class Pokemon(
         joinColumns = [JoinColumn(name = "pokemon_id")],
         inverseJoinColumns = [JoinColumn(name = "abilities_id")]
     )
-    val abilities: List<Abilities>?
+    val abilities: List<Ability>?
 )

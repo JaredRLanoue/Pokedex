@@ -1,62 +1,69 @@
 package com.bushelpowered.pokedex.service
 
-import com.bushelpowered.pokedex.dto.MessageDTO
-import com.bushelpowered.pokedex.dto.TrainerLoginDTO
-import com.bushelpowered.pokedex.dto.TrainerRegistrationDTO
+import com.bushelpowered.pokedex.dto.request.TrainerLoginRequest
+import com.bushelpowered.pokedex.dto.request.TrainerRegistrationRequest
+import com.bushelpowered.pokedex.dto.response.MessageResponse
 import com.bushelpowered.pokedex.repository.TrainerRepository
+import com.bushelpowered.pokedex.util.toTrainerEntity
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.regex.Pattern
+import javax.security.sasl.AuthenticationException
 
 
 @Service
-class TrainerService(private val trainerRepository: TrainerRepository, private val converterService: ConverterService) {
+class TrainerService(
+    private val trainerRepository: TrainerRepository
+) {
 
-    fun checkIfUserExists(userId: Int): Boolean {
-        return trainerRepository.existsById(userId)
-    }
-
-    fun checkValidRegistration(trainer: TrainerRegistrationDTO): ResponseEntity<Any> {
+    fun checkValidRegistration(trainer: TrainerRegistrationRequest): ResponseEntity<MessageResponse> {
         val emailPattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE)
         val hashingLimit = 72
         val passwordMinimum = 8
 
-        return if (!emailPattern.matcher(trainer.email.toString()).matches()) {
-            ResponseEntity.badRequest().body(MessageDTO("Invalid email"))
-        } else if (trainer.password!!.length < passwordMinimum || trainer.password!!.length > hashingLimit || (trainer.password!!.count(Char::isDigit) < 2)) {
-            ResponseEntity.badRequest().body(MessageDTO("Password requirements not met, must have $passwordMinimum-$hashingLimit characters and contain two numbers"))
+        return if (!emailPattern.matcher(trainer.email).matches()) {
+            throw IllegalArgumentException("Invalid email")
+        } else if (trainer.password.length < passwordMinimum || trainer.password.length > hashingLimit || (trainer.password.count(
+                Char::isDigit
+            ) < 2)
+        ) {
+            throw IllegalArgumentException("Password requirements not met, must have $passwordMinimum-$hashingLimit characters and contain two numbers")
         } else if (trainerRepository.findByUsername(trainer.username) != null) {
-            ResponseEntity.badRequest().body(MessageDTO("Username already exists"))
+            throw IllegalArgumentException("Username already exists")
         } else if (trainerRepository.findByEmail(trainer.email) != null) {
-            ResponseEntity.badRequest().body(MessageDTO("Email already exists"))
+            throw IllegalArgumentException("Email already exists")
         } else createUser(trainer)
     }
 
-    fun createUser(trainer: TrainerRegistrationDTO): ResponseEntity<Any> {
+    fun createUser(trainer: TrainerRegistrationRequest): ResponseEntity<MessageResponse> {
         trainer.password = BCryptPasswordEncoder().encode(trainer.password)
-        val trainerEntity = converterService.trainerDTOToEntity(trainer)
+        val trainerEntity = trainer.toTrainerEntity()
 
         trainerRepository.save(trainerEntity)
-        return ResponseEntity.accepted().body(MessageDTO("${trainer.username}'s account has been created"))
+        return ResponseEntity(MessageResponse("${trainer.username}'s account has been created"), HttpStatus.CREATED)
     }
 
-    fun checkLogin(trainerLogin: TrainerLoginDTO): ResponseEntity<MessageDTO> {
+    fun checkLogin(trainerLogin: TrainerLoginRequest): ResponseEntity<MessageResponse> {
         val hashingLimit = 72
 
         if (trainerRepository.existsByEmail(trainerLogin.email)) {
-            if (trainerLogin.password!!.length > hashingLimit) {
-                return ResponseEntity.badRequest().body(MessageDTO("Password exceeds character limit"))
+            if (trainerLogin.password.length > hashingLimit) {
+                throw AuthenticationException("Password exceeds character limit")
             }
-            val passwordMatches = BCryptPasswordEncoder().matches(trainerLogin.password, trainerRepository.findByEmail(trainerLogin.email)?.password)
+            val passwordMatches = BCryptPasswordEncoder().matches(
+                trainerLogin.password,
+                trainerRepository.findByEmail(trainerLogin.email)?.password
+            )
 
             return if (passwordMatches) {
-                ResponseEntity.accepted().body(MessageDTO("Passwords match for user, login is allowed"))
+                ResponseEntity(MessageResponse("Passwords match for user, login is allowed"), HttpStatus.OK)
             } else {
-                ResponseEntity.badRequest().body(MessageDTO("Invalid email or password"))
+                throw AuthenticationException("Invalid email or password")
             }
         } else {
-            return ResponseEntity.badRequest().body(MessageDTO("Invalid email or password"))
+            throw AuthenticationException("Invalid email or password")
         }
     }
 }

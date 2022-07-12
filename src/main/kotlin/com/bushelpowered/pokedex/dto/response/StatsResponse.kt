@@ -1,8 +1,8 @@
-package com.bushelpowered.pokedex.dto
+package com.bushelpowered.pokedex.dto.response
 
 import com.google.gson.annotations.SerializedName
 
-data class StatsDTO(
+data class StatsResponse(
     val hp: Int,
     val speed: Int,
     val attack: Int,

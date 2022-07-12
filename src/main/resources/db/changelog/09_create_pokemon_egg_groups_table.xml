@@ -6,11 +6,11 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
 
-    <changeSet id="7" author="Jared Lanoue">
+    <changeSet id="9" author="Jared Lanoue">
 
-        <createTable tableName="pokemon_abilities">
-            <column name="pokemon_id" type="int"/>
-            <column name="abilities_id" type="int"/>
+        <createTable tableName="pokemon_egg_groups">
+            <column name="pokemon_id" type="bigint"/>
+            <column name="egg_groups_id" type="bigint"/>
         </createTable>
 
     </changeSet>

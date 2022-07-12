@@ -7,7 +7,7 @@ import javax.persistence.*
 data class Trainer(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int?,
+    val id: Int? = null,
     val username: String,
     val email: String,
     var password: String,
@@ -17,5 +17,5 @@ data class Trainer(
         joinColumns = [JoinColumn(name = "trainer_id")],
         inverseJoinColumns = [JoinColumn(name = "pokemon_id")]
     )
-    var capturedPokemon: List<Pokemon>?
+    var capturedPokemon: List<Pokemon> = listOf()
 )

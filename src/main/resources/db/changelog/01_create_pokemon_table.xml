@@ -9,13 +9,13 @@
     <changeSet id="1" author="Jared Lanoue">
 
         <createTable tableName="pokemon">
-            <column name="id" type="int">
+            <column name="id" type="bigint">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="name" type="text"/>
+            <column name="name" type="varchar(255)"/>
             <column name="height" type="float"/>
             <column name="weight" type="float"/>
-            <column name="genus" type="text"/>
+            <column name="genus" type="varchar(255)"/>
             <column name="description" type="text"/>
             <column name="hp" type="int"/>
             <column name="speed" type="int"/>
@@ -24,5 +24,6 @@
             <column name="special_attack" type="int"/>
             <column name="special_defense" type="int"/>
         </createTable>
+
     </changeSet>
 </databaseChangeLog>

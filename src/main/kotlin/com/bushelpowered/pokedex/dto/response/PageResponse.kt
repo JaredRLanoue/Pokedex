@@ -1,10 +1,10 @@
-package com.bushelpowered.pokedex.dto
+package com.bushelpowered.pokedex.dto.response
 
-data class PageDTO(
-    val data: List<PokemonDTO>,
-    val meta: MetaDataDTO
+data class PageResponse(
+    val data: List<PokemonResponse>,
+    val meta: MetaData
 ) {
-    data class MetaDataDTO(
+    data class MetaData(
         val currentPage: Int,
         val lastPage: Int,
         val PokemonPerPage: Int,
